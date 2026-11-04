@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bankmkt"
+version = "0.1.0"
+description = "Analyse des campagnes de marketing direct d'une banque : entrepôt SQL, indicateurs, études statistiques, score de ciblage et tableau de bord."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "pandas>=2.0",
+    "duckdb>=1.0",
+    "scipy>=1.11",
+    "statsmodels>=0.14",
+    "scikit-learn>=1.4",
+    "plotly>=5.20",
+    "openpyxl>=3.1",
+]
+
+[project.optional-dependencies]
+notebook = ["matplotlib>=3.8", "jupytext>=1.16", "nbconvert>=7.0", "ipykernel>=6.0"]
+dev = ["pytest>=8.0", "ruff>=0.5"]
+
+[project.scripts]
+bankmkt = "bankmkt.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/bankmkt"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["notebooks/*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["B905"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff.lint.per-file-ignores]
+# Cellules de notebook (expressions affichées) et tableaux markdown.
+"notebooks/*.py" = ["B018", "E501"]
+# Gabarit HTML/CSS en chaîne de caractères.
+"src/bankmkt/dashboard.py" = ["E501"]
